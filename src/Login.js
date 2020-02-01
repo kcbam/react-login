@@ -3,44 +3,40 @@ import { Link } from 'react-router-dom';
 import fire from './config/Fire';
 
 class Login extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
+    state = {
             email: '',
-            password: ''
+            password: '',
+            err:''
         };
-        this.login = this.login.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.signUp = this.signUp.bind(this);
-    }
-    handleChange(e){
+        
+    handleChange = (e) => {
         this.setState({ [e.target.name]: e.target.value});
     }
-    login(e){
+    login = (e) =>{
         e.preventDefault();
         fire.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
         .catch((error) =>{
-            console.log(error);
+            this.setState({err:'Invalid username and password'})
         })
     }
 
-    signUp(e){
+    signUp = (e) =>{
         e.preventDefault();
         fire.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-        .then((u)=>{console.log(u)})
         .catch((error) => {
-            console.log(error);
+            this.setState({ err:'Please SignUp with valid email and password'})
         })
     }
 
     render() {
         return (
-            <div>
+            <div className="loginDetails">
+                <p className="error"> { this.state.err }</p>
                 <form>
-                    <input type="email" value={ this.state.email} onChange={ this.handleChange} />
-                    <input type="password" value={ this.state.password} onChange={ this.handleChange} />
-                    <button type="submit" onClick={ this.login }>Login</button>
-                    <button type="submit" onClick={ this.signUp }>SignUp</button>
+                    <input type="email" placeholder="Username" onChange={ this.handleChange} name="email" />
+                    <input type="password" placeholder="Password" onChange={ this.handleChange} name="password" />
+                    <button type="submit" className="login" onClick={ this.login }>Login</button>
+                    <button type="submit" className="signUp" onClick={ this.signUp }>SignUp</button>
                 </form>
             </div>
         );
